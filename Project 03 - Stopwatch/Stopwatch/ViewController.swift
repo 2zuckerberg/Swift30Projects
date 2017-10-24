@@ -2,7 +2,6 @@
 //  ViewController.swift
 //  Stopwatch
 //
-//  Created by Yi Gu on 2/18/16.
 //  Copyright © 2016 YiGu. All rights reserved.
 //
 
@@ -45,7 +44,6 @@ class ViewController: UIViewController, UITableViewDelegate {
     button.backgroundColor = UIColor.white
   }
   
-  
   // MARK: hide status bar
   override var preferredStatusBarStyle : UIStatusBarStyle {
     return UIStatusBarStyle.lightContent
@@ -58,6 +56,10 @@ class ViewController: UIViewController, UITableViewDelegate {
     if !isPlay {
       mainStopwatch.timer = Timer.scheduledTimer(timeInterval: 0.035, target: self, selector: Selector.updateMainTimer, userInfo: nil, repeats: true)
       lapStopwatch.timer = Timer.scheduledTimer(timeInterval: 0.035, target: self, selector: Selector.updateLapTimer, userInfo: nil, repeats: true)
+      
+      RunLoop.current.add(mainStopwatch.timer, forMode: .commonModes)
+      RunLoop.current.add(lapStopwatch.timer, forMode: .commonModes)
+      
       isPlay = true
       changeButton(playPauseButton, title: "Stop", titleColor: UIColor.red)
     } else {
@@ -83,6 +85,7 @@ class ViewController: UIViewController, UITableViewDelegate {
       lapsTableView.reloadData()
       resetLapTimer()
       lapStopwatch.timer = Timer.scheduledTimer(timeInterval: 0.035, target: self, selector: Selector.updateLapTimer, userInfo: nil, repeats: true)
+      RunLoop.current.add(lapStopwatch.timer, forMode: .commonModes)
     }
   }
   
@@ -109,11 +112,11 @@ class ViewController: UIViewController, UITableViewDelegate {
   }
   
   // MARK: update two timer labels seperately
-  func updateMainTimer() {
+  @objc func updateMainTimer() {
     updateTimer(mainStopwatch, label: timerLabel)
   }
   
-  func updateLapTimer() {
+  @objc func updateLapTimer() {
     updateTimer(lapStopwatch, label: lapTimerLabel)
   }
   
